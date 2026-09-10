@@ -1,3 +1,6 @@
+<!-- Copyright (C) 2026 my-app-s (M.R.E) -->
+<!-- Licensed under the GNU AGPLv3 -->
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -34,9 +37,9 @@
                 <input type="file" id="background-upload" class="block w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700 cursor-pointer select-text">
             </div>
 
-            <div id="div-size" class="div-for-size bg-neutral-900 border border-neutral-800 rounded-xl p-6 flex flex-col items-center justify-center gap-2 min-h-[150px]">
-                <div class="div-for-size-width text-sm text-neutral-400">Width: 500px</div>
-                <div class="div-for-size-height text-sm text-neutral-400">Height: 100px</div>
+            <div id="div-size" class="div-for-size relative bg-neutral-900 border border-neutral-800 rounded-xl p-4 flex flex-col items-center justify-center gap-1 min-h-[10px] overflow-visible">
+                <div id="label-width" class="text-xs text-white transition-all duration-75">Width: 500px</div>
+                <div id="label-height" class="text-xs text-white transition-all duration-75">Height: 100px</div>
             </div>
         </main>
 
@@ -55,8 +58,6 @@
                 const heightSlider = document.querySelector("#range-height");
                 const textWidth = document.querySelector("#text-width");
                 const textHeight = document.querySelector("#text-height");
-                const widthDisplay = document.querySelector(".div-for-size-width");
-                const heightDisplay = document.querySelector(".div-for-size-height");
                 const updateButton = document.querySelector("#update-button");
 
                 function applySize(w, h) {
@@ -68,6 +69,17 @@
 
                     div.style.width = widthValue;
                     div.style.height = heightValue;
+
+                    const widthDisplay = document.querySelector("#label-width");
+                    const heightDisplay = document.querySelector("#label-height");
+
+                    if (w < 126 || h < 50) {
+                        widthDisplay.className = "absolute -top-6 left-0 text-[10px] text-white whitespace-nowrap";
+                        heightDisplay.className = "absolute top-0 left-[calc(100%+8px)] text-[10px] text-white whitespace-nowrap";
+                    } else {
+                        widthDisplay.className = "text-xs text-white whitespace-nowrap";
+                        heightDisplay.className = "text-xs text-white whitespace-nowrap";
+                    }
 
                     widthDisplay.textContent = "Width: " + widthValue;
                     heightDisplay.textContent = "Height: " + heightValue;
@@ -84,8 +96,8 @@
                 heightSlider.addEventListener("input", () => applySize(widthSlider.value, heightSlider.value));
 
                 updateButton.addEventListener("click", () => {
-                    const w = parseInt(textWidth.value) || 100;
-                    const h = parseInt(textHeight.value) || 100;
+                    const w = parseInt(textWidth.value) || 10;
+                    const h = parseInt(textHeight.value) || 10;
                     applySize(w, h);
                 });
             });
@@ -199,23 +211,23 @@
                     let newT = startTop;
 
                     if (resizeDirection.includes("right")) {
-                        newW = Math.max(10, Math.min(1000, startWidth + dx));
+                        newW = Math.round(Math.max(10, Math.min(1000, startWidth + dx)));
                     }
                     if (resizeDirection.includes("left")) {
-                        const potentialW = startWidth - dx;
+                        const potentialW = Math.round(startWidth - dx);
                         if (potentialW >= 10 && potentialW <= 1000) {
                             newW = potentialW;
-                            newL = startLeft + dx;
+                            newL = Math.round(startLeft + dx);
                         }
                     }
                     if (resizeDirection.includes("bottom")) {
-                        newH = Math.max(10, Math.min(1000, startHeight + dy));
+                        newH = Math.round(Math.max(10, Math.min(1000, startHeight + dy)));
                     }
                     if (resizeDirection.includes("top")) {
-                        const potentialH = startHeight - dy;
+                        const potentialH = Math.round(startHeight - dy);
                         if (potentialH >= 10 && potentialH <= 1000) {
                             newH = potentialH;
-                            newT = startTop + dy;
+                            newT = Math.round(startTop + dy);
                         }
                     }
 
@@ -229,8 +241,19 @@
                     document.querySelector("#text-width").value = newW;
                     document.querySelector("#text-height").value = newH;
 
-                    document.querySelector(".div-for-size-width").textContent = "Width: " + newW + "px";
-                    document.querySelector(".div-for-size-height").textContent = "Height: " + newH + "px";
+                    const widthDisplay = document.querySelector("#label-width");
+                    const heightDisplay = document.querySelector("#label-height");
+
+                    if (newW < 126 || newH < 50) {
+                        widthDisplay.className = "absolute -top-6 left-0 text-[10px] text-white whitespace-nowrap";
+                        heightDisplay.className = "absolute top-0 left-[calc(100%+8px)] text-[10px] text-white whitespace-nowrap";
+                    } else {
+                        widthDisplay.className = "text-xs text-white whitespace-nowrap";
+                        heightDisplay.className = "text-xs text-white whitespace-nowrap";
+                    }
+
+                    widthDisplay.textContent = "Width: " + newW + "px";
+                    heightDisplay.textContent = "Height: " + newH + "px";
                 }
             }
 
