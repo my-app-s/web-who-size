@@ -218,6 +218,10 @@
                         if (potentialW >= 10 && potentialW <= 1000) {
                             newW = potentialW;
                             newL = Math.round(startLeft + dx);
+                        } else if (potentialW < 10) {
+                            newW = 10;
+                            // Жестко фиксируем левую границу, если уперлись в минимум
+                            newL = Math.round(startLeft + (startWidth - 10)); 
                         }
                     }
                     if (resizeDirection.includes("bottom")) {
@@ -228,6 +232,10 @@
                         if (potentialH >= 10 && potentialH <= 1000) {
                             newH = potentialH;
                             newT = Math.round(startTop + dy);
+                        } else if (potentialH < 10) {
+                            newH = 10;
+                            // Жестко фиксируем верхнюю границу, если уперлись в минимум
+                            newT = Math.round(startTop + (startHeight - 10));
                         }
                     }
 
