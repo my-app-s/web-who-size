@@ -1,8 +1,38 @@
-I created this web app for myself because I needed to roughly determine the required size for a GIF image.
-This web app may not show exact dimensions!
+# Web Who Size
 
-Данно веб-приложение было сделано для себя так как нужно было примерно узнать нужный размер для Gif изображения.
-Данное веб-приложение может показать предположительные размеры не точные!
+A lightweight, responsive web tool designed to help developers and designers visualize, test, and preview exact element dimensions in real-time. Built with pure HTML/JavaScript and styled using Tailwind CSS v4, featuring a completely serverless standalone CLI build workflow via GitHub Actions.
+
+## Features
+
+* **Real-Time Dimension Control:** Adjust element width and height instantly using interactive range sliders or precise text inputs.
+* **Draggable Preview Box:** Freely drag and position the preview element across the screen to test layouts and spacing.
+* **Background Upload:** Upload local background images (`JPG`, `PNG`, etc.) to preview how UI components look over custom backgrounds.
+* **Fully Automated CI/CD:** Zero-config deployment using GitHub Actions that downloads Tailwind CLI, compiles styles on the fly, and deploys directly to GitHub Pages.
+
+## Project Structure
+
+```text
+.
+├── .github/workflows/deploy-page.yml  # GitHub Actions CI/CD pipeline
+├── index.html                         # Main application markup & inline script logic
+├── input.css                          # Tailwind CSS entry point
+├── output.css                         # Compiled & minified production stylesheet (auto-generated)
+├── LICENSE                            # Project license
+└── README.md                          # Project documentation
+
+```
+
+## Local Development & Build
+
+To compile the styles locally using the standalone Tailwind CSS CLI:
+
+1. Download the Tailwind CLI binary for your OS from the official releases.
+2. Run the build command to compile `input.css` into `output.css`:
+```bash
+./tailwindcss-linux-x64 -i input.css -o output.css --minify
+
+```
+3. Open `index.html` directly in your browser or serve it via a local static server.
 
 ---
 
