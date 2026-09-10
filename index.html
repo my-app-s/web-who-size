@@ -1,38 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>What size</title>
-        <link rel="stylesheet" href="template/css/style.css">
+        <link rel="stylesheet" href="output.css">
         <script src="template/js/script.js" defer></script>
     </head>
-    <body>
-        <div class="main-div">
-            <h1>What size element for web</h1>
-            <p>Pleas enter size widht and height 10 to 1000px:</p>
-        </div>
-        <div>
-            <label>
-                W: <input id="range-width" type="range" min="10" max="1000" value="500">
-            </label>
-            <label>
-                H: <input id="range-height" type="range" min="10" max="1000" value="100">
-            </label>
-        </div>
-        <div><!-- By enter size-->
-            <input id="text-width" type="text">
-            <label>X</label>
-            <input id="text-height" type="text">
-            <button id="update-button">Select</button>
-        </div>
-        <div>
-            <!-- By download file for background -->
-            <input type="file" id="background-upload">
-        </div>
-        <div id="div-size" class="div-for-size">
-            <div class="div-for-size-width">Width: 500px</div>
-            <div class="div-for-size-height">Height: 100px</div>
-        </div>
+    <body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col justify-between font-sans antialiased">
+        <main class="mx-auto max-w-xl w-full p-6 flex flex-col gap-6 my-auto">
+            <div class="flex flex-col gap-2">
+                <h1 class="text-2xl font-bold tracking-tight">What size element for web</h1>
+                <p class="text-neutral-400 text-sm">Please enter width and height (10 to 1000px):</p>
+            </div>
+
+            <div class="cursor-grab flex flex-col sm:flex-row gap-4 bg-neutral-900 border border-neutral-800 p-4 rounded-xl">
+                <label class="flex-1 flex items-center justify-between text-sm font-medium">
+                    <span>W:</span>
+                    <input id="range-width" type="range" min="10" max="1000" value="500" class="w-3/4 accent-neutral-200 cursor-pointer">
+                </label>
+                <label class="flex-1 flex items-center justify-between text-sm font-medium">
+                    <span>H:</span>
+                    <input id="range-height" type="range" min="10" max="1000" value="100" class="w-3/4 accent-neutral-200 cursor-pointer">
+                </label>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <input id="text-width" type="text" placeholder="Width" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-neutral-500">
+                <span class="text-neutral-500 font-semibold">×</span>
+                <input id="text-height" type="text" placeholder="Height" class="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-neutral-500">
+                <button id="update-button" class="bg-neutral-100 text-neutral-900 font-medium px-5 py-2 rounded-lg text-sm hover:bg-neutral-200 transition-colors cursor-pointer">Select</button>
+            </div>
+
+            <div>
+                <input type="file" id="background-upload" class="block w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700 cursor-pointer">
+            </div>
+
+            <div id="div-size" class="div-for-size bg-neutral-900 border border-neutral-800 rounded-xl p-6 flex flex-col items-center justify-center gap-2 min-h-[150px]">
+                <div class="div-for-size-width text-sm text-neutral-400">Width: 500px</div>
+                <div class="div-for-size-height text-sm text-neutral-400">Height: 100px</div>
+            </div>
+        </main>
+
+        <footer class="footer-info text-center text-xs text-neutral-500 py-6 border-t border-neutral-900 flex flex-col gap-1">
+            <div>© Copyright 2025 my-app-s(M.R.E)</div>
+            <div>
+                <a href="https://github.com/my-app-s/web-who-size" class="text-neutral-400 hover:underline">web-who-size</a>
+            </div>
+            <div>Content rights and property belong to their respective authors.</div>
+        </footer>
     </body>
-    <footer class="footer-info">© 2025 All rights reserved. This website's code and functionality are protected by copyright. Content remains the property of its respective authors.</footer>
 </html>
