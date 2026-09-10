@@ -2,6 +2,20 @@
 
 A lightweight, responsive web tool designed to help developers and designers visualize, test, and preview exact element dimensions in real-time. Built with pure HTML/JavaScript and styled using Tailwind CSS v4, featuring a completely serverless standalone CLI build workflow via GitHub Actions.
 
+## 🚀 Performance & Core Web Vitals
+
+Проект развернут на GitHub Pages и оптимизирован для максимальной скорости работы без лишнего клиентского JavaScript. Метрики по результатам контрольного замера продакшена (Chrome DevTools):
+
+| Метрика | Значение | Оценка |
+| --- | --- | --- |
+| **Largest Contentful Paint (LCP)** | 0.46s | Отлично |
+| **Cumulative Layout Shift (CLS)** | 0.00 | Идеально |
+| **Interaction to Next Paint (INP)** | 16ms | Отлично |
+
+![LCP](https://img.shields.io/badge/LCP-0.46s-brightgreen?style=flat-square&logo=googlechrome)
+![CLS](https://img.shields.io/badge/CLS-0.00-brightgreen?style=flat-square&logo=googlechrome)
+![INP](https://img.shields.io/badge/INP-16ms-brightgreen?style=flat-square&logo=googlechrome)
+
 ## Features
 
 * **Real-Time Dimension Control:** Adjust element width and height instantly using interactive range sliders or precise text inputs.
