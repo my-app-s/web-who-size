@@ -1,5 +1,14 @@
 # Web Who Size
 
+![Static Badge](https://img.shields.io/badge/HTML5-24214e?logo=HTML5)
+![Static Badge](https://img.shields.io/badge/CSS3-24214e?logo=CSS)
+![Static Badge](https://img.shields.io/badge/JavaScript-24214e?logo=JavaScript)
+![Static Badge](https://img.shields.io/badge/JavaScript-24214e?logo=TailwindCSS)
+
+> Status Github Actions
+> 
+> ![Status GitHub Pages](https://github.com/my-app-s/web-who-size/actions/workflows/deploy-page.yml/badge.svg)
+
 A lightweight, responsive web tool designed to help developers and designers visualize, test, and preview exact element dimensions in real-time. Built with pure HTML/JavaScript and styled using Tailwind CSS v4, featuring a completely serverless standalone CLI build workflow via GitHub Actions.
 
 ## 🚀 Performance & Core Web Vitals
