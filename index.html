@@ -5,9 +5,9 @@
         <title>What size</title>
         <link rel="stylesheet" href="output.css">
     </head>
-    <body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col justify-between font-sans antialiased">
+    <body class="bg-neutral-950 text-neutral-100 min-h-screen flex flex-col justify-between font-sans antialiased select-none">
         <main class="mx-auto max-w-xl w-full p-6 flex flex-col gap-6 my-auto">
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2 select-text">
                 <h1 class="text-2xl font-bold tracking-tight">What size element for web</h1>
                 <p class="text-neutral-400 text-sm">Please enter width and height (10 to 1000px):</p>
             </div>
@@ -31,7 +31,7 @@
             </div>
 
             <div>
-                <input type="file" id="background-upload" class="block w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700 cursor-pointer">
+                <input type="file" id="background-upload" class="block w-full text-sm text-neutral-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-neutral-800 file:text-neutral-200 hover:file:bg-neutral-700 cursor-pointer select-text">
             </div>
 
             <div id="div-size" class="div-for-size bg-neutral-900 border border-neutral-800 rounded-xl p-6 flex flex-col items-center justify-center gap-2 min-h-[150px]">
@@ -40,7 +40,7 @@
             </div>
         </main>
 
-        <footer class="footer-info text-center text-xs text-neutral-500 py-6 border-t border-neutral-900 flex flex-col gap-1">
+        <footer class="footer-info text-center text-xs text-neutral-500 py-6 border-t border-neutral-900 flex flex-col gap-1 select-text">
             <div>© Copyright 2025 my-app-s(M.R.E)</div>
             <div>
                 <a href="https://github.com/my-app-s/web-who-size" class="text-neutral-400 hover:underline">web-who-size</a>
@@ -60,6 +60,9 @@
                 const updateButton = document.querySelector("#update-button");
 
                 function applySize(w, h) {
+                    w = Math.max(10, Math.min(1000, w));
+                    h = Math.max(10, Math.min(1000, h));
+
                     const widthValue = w + "px";
                     const heightValue = h + "px";
 
@@ -101,69 +104,161 @@
                 }
             });
 
-            // Перемещение элемента (Мышь + Тачпады / Мобильные)
+            // Перемещение и изменение размера по всем краям и углам
             const draggableDiv = document.getElementById("div-size");
-            let offsetX = 0, offsetY = 0, isDragging = false;
+            let isDragging = false;
+            let resizeDirection = null; 
+            let startX = 0, startY = 0, startWidth = 0, startHeight = 0, startLeft = 0, startTop = 0;
 
-            function startDrag(clientX, clientY) {
-                isDragging = true;
+            const BORDER_SIZE = 14; // Зона захвата по краям в пикселях
+
+            function getDirection(clientX, clientY) {
+                const rect = draggableDiv.getBoundingClientRect();
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
+
+                let vertical = "";
+                let horizontal = "";
+
+                if (y < BORDER_SIZE) vertical = "top";
+                else if (y > rect.height - BORDER_SIZE) vertical = "bottom";
+
+                if (x < BORDER_SIZE) horizontal = "left";
+                else if (x > rect.width - BORDER_SIZE) horizontal = "right";
+
+                if (vertical && horizontal) return vertical + "-" + horizontal;
+                if (vertical) return vertical;
+                if (horizontal) return horizontal;
+                return "";
+            }
+
+            // Динамическая принудительная смена курсора при наведении
+            draggableDiv.addEventListener("mousemove", (e) => {
+                if (isDragging || resizeDirection) return;
+                const dir = getDirection(e.clientX, e.clientY);
+                
+                const cursors = {
+                    "top": "ns-resize",
+                    "bottom": "ns-resize",
+                    "left": "ew-resize",
+                    "right": "ew-resize",
+                    "top-left": "nwse-resize",
+                    "bottom-right": "nwse-resize",
+                    "top-right": "nesw-resize",
+                    "bottom-left": "nesw-resize"
+                };
+
+                draggableDiv.style.cursor = cursors[dir] || "grab";
+            });
+
+            function startAction(clientX, clientY) {
                 const rect = draggableDiv.getBoundingClientRect();
                 
-                // Если элемент еще не был абсолютным, фиксируем его текущие координаты перед сдвигом
                 if (draggableDiv.style.position !== "absolute") {
                     draggableDiv.style.position = "absolute";
                     draggableDiv.style.left = rect.left + "px";
                     draggableDiv.style.top = rect.top + "px";
                 }
 
-                offsetX = clientX - draggableDiv.getBoundingClientRect().left;
-                offsetY = clientY - draggableDiv.getBoundingClientRect().top;
-                draggableDiv.style.cursor = "grabbing";
+                const dir = getDirection(clientX, clientY);
+
+                if (dir) {
+                    resizeDirection = dir;
+                    startX = clientX;
+                    startY = clientY;
+                    startWidth = rect.width;
+                    startHeight = rect.height;
+                    startLeft = rect.left;
+                    startTop = rect.top;
+                } else {
+                    isDragging = true;
+                    startX = clientX - rect.left;
+                    startY = clientY - rect.top;
+                    draggableDiv.style.cursor = "grabbing";
+                }
                 draggableDiv.style.transition = "none";
             }
 
-            function onDrag(clientX, clientY) {
-                if (!isDragging) return;
-                let newX = clientX - offsetX;
-                let newY = clientY - offsetY;
+            function onAction(clientX, clientY) {
+                if (isDragging) {
+                    let newX = clientX - startX;
+                    let newY = clientY - startY;
 
-                // Базовые ограничения, чтобы элемент не улетал полностью за пределы экрана
-                const maxX = window.innerWidth - draggableDiv.offsetWidth;
-                const maxY = window.innerHeight - draggableDiv.offsetHeight;
+                    const maxX = window.innerWidth - draggableDiv.offsetWidth;
+                    const maxY = window.innerHeight - draggableDiv.offsetHeight;
 
-                newX = Math.max(0, Math.min(newX, maxX));
-                newY = Math.max(0, Math.min(newY, maxY));
+                    draggableDiv.style.left = Math.max(0, Math.min(newX, maxX)) + "px";
+                    draggableDiv.style.top = Math.max(0, Math.min(newY, maxY)) + "px";
+                } else if (resizeDirection) {
+                    const dx = clientX - startX;
+                    const dy = clientY - startY;
 
-                draggableDiv.style.left = newX + "px";
-                draggableDiv.style.top = newY + "px";
+                    let newW = startWidth;
+                    let newH = startHeight;
+                    let newL = startLeft;
+                    let newT = startTop;
+
+                    if (resizeDirection.includes("right")) {
+                        newW = Math.max(10, Math.min(1000, startWidth + dx));
+                    }
+                    if (resizeDirection.includes("left")) {
+                        const potentialW = startWidth - dx;
+                        if (potentialW >= 10 && potentialW <= 1000) {
+                            newW = potentialW;
+                            newL = startLeft + dx;
+                        }
+                    }
+                    if (resizeDirection.includes("bottom")) {
+                        newH = Math.max(10, Math.min(1000, startHeight + dy));
+                    }
+                    if (resizeDirection.includes("top")) {
+                        const potentialH = startHeight - dy;
+                        if (potentialH >= 10 && potentialH <= 1000) {
+                            newH = potentialH;
+                            newT = startTop + dy;
+                        }
+                    }
+
+                    draggableDiv.style.width = newW + "px";
+                    draggableDiv.style.height = newH + "px";
+                    draggableDiv.style.left = newL + "px";
+                    draggableDiv.style.top = newT + "px";
+
+                    document.querySelector("#range-width").value = newW;
+                    document.querySelector("#range-height").value = newH;
+                    document.querySelector("#text-width").value = newW;
+                    document.querySelector("#text-height").value = newH;
+
+                    document.querySelector(".div-for-size-width").textContent = "Width: " + newW + "px";
+                    document.querySelector(".div-for-size-height").textContent = "Height: " + newH + "px";
+                }
             }
 
-            function stopDrag() {
-                if (isDragging) {
+            function stopAction() {
+                if (isDragging || resizeDirection) {
                     isDragging = false;
+                    resizeDirection = null;
                     draggableDiv.style.cursor = "grab";
                 }
             }
 
-            // События мыши
-            draggableDiv.addEventListener("mousedown", (e) => startDrag(e.clientX, e.clientY));
-            document.addEventListener("mousemove", (e) => onDrag(e.clientX, e.clientY));
-            document.addEventListener("mouseup", stopDrag);
+            draggableDiv.addEventListener("mousedown", (e) => startAction(e.clientX, e.clientY));
+            document.addEventListener("mousemove", (e) => onAction(e.clientX, e.clientY));
+            document.addEventListener("mouseup", stopAction);
 
-            // События для сенсорных экранов (Mobile / Touch)
             draggableDiv.addEventListener("touchstart", (e) => {
                 if (e.touches.length === 1) {
-                    startDrag(e.touches[0].clientX, e.touches[0].clientY);
+                    startAction(e.touches[0].clientX, e.touches[0].clientY);
                 }
             }, { passive: true });
 
             document.addEventListener("touchmove", (e) => {
-                if (isDragging && e.touches.length === 1) {
-                    onDrag(e.touches[0].clientX, e.touches[0].clientY);
+                if ((isDragging || resizeDirection) && e.touches.length === 1) {
+                    onAction(e.touches[0].clientX, e.touches[0].clientY);
                 }
             }, { passive: true });
 
-            document.addEventListener("touchend", stopDrag);
+            document.addEventListener("touchend", stopAction);
         </script>
     </body>
 </html>
